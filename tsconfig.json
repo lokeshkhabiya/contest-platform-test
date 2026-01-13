@@ -1,0 +1,3 @@
+{
+  "extends": "@contest-platform-assignment/config/tsconfig.base.json"
+}
