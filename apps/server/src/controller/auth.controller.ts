@@ -10,7 +10,7 @@ const signup = async (req: Request, res: Response) => {
 
         if (!success) {
             return res.status(400).json({
-                success: "false",
+                success: false,
                 data: null,
                 error: "INVALID_REQUEST",
             });
@@ -26,7 +26,7 @@ const signup = async (req: Request, res: Response) => {
 
         if (checkExistingUser) {
             return res.status(400).json({
-                success: "false",
+                success: false,
                 data: null,
                 error: "EMAIL_ALREADY_EXISTS",
             });
@@ -45,7 +45,7 @@ const signup = async (req: Request, res: Response) => {
         });
 
         return res.status(201).json({
-            success: "true",
+            success: true,
             data: {
                 id: newUser.id,
                 name: newUser.name,
@@ -57,8 +57,9 @@ const signup = async (req: Request, res: Response) => {
     } catch (error) {
         console.log("Error while signup:", error);
         return res.status(500).json({
-            success: "false",
-            message: "Internal server error",
+            success: false,
+            data: null,
+            error: "Internal server error",
         });
     }
 };
@@ -69,8 +70,8 @@ const login = async (req: Request, res: Response) => {
 
         if (!success) {
             return res.status(400).json({
-                success: "false",
-                data: "null",
+                success: false,
+                data: null,
                 error: "INVALID_REQUEST",
             });
         }
@@ -84,10 +85,10 @@ const login = async (req: Request, res: Response) => {
         });
 
         if (!checkExistingUser) {
-            return res.status(400).json({
-                success: "false",
+            return res.status(401).json({
+                success: false,
                 data: null,
-                error: "EMAIL_DOESNOT_EXISTS",
+                error: "INVALID_CREDENTIALS",
             });
         }
 
@@ -97,7 +98,7 @@ const login = async (req: Request, res: Response) => {
         );
 
         if (!verifyPassword) {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false,
                 data: null,
                 error: "INVALID_CREDENTIALS",
@@ -105,7 +106,7 @@ const login = async (req: Request, res: Response) => {
         }
 
         const token = jwt.sign(
-            { userId: checkExistingUser.id },
+            { userId: checkExistingUser.id, role: checkExistingUser.role },
             process.env.JWT_SECRET as string,
             { expiresIn: "1h" }
         );
@@ -118,10 +119,11 @@ const login = async (req: Request, res: Response) => {
             error: null,
         });
     } catch (error) {
-        console.log("Error while signup:", error);
+        console.log("Error while login:", error);
         return res.status(500).json({
-            success: "false",
-            message: "Internal server error",
+            success: false,
+            data: null,
+            error: "Internal server error",
         });
     }
 };

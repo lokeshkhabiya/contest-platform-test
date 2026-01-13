@@ -39,9 +39,9 @@ const createContest = async (req: Request, res: Response) => {
                 id: contest.id,
                 title: contest.title,
                 description: contest.description,
-                creator_id: contest.creator_id,
-                start_time: contest.start_time,
-                end_time: contest.end_time,
+                creatorId: contest.creator_id,
+                startTime: contest.start_time,
+                endTime: contest.end_time,
             },
             error: null,
         });
